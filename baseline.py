@@ -8,6 +8,7 @@ from transformers import (AutoTokenizer,
 from datasets import load_metric
 import numpy as np
 import wandb
+from nlp_utils import read_ds
 
 model_type = "t5-base"
 batch_size = 4
@@ -127,8 +128,8 @@ def train(datasets, source_lang, target_lang):
 
 
 def main():
-    train_dataset = Dataset.from_dict(path_to_dict("data/train.labeled"))
-    validation_dataset = Dataset.from_dict(path_to_dict("data/train.labeled"))
+    train_dataset = Dataset.from_dict(read_ds("data/train.labeled"))
+    validation_dataset = Dataset.from_dict(read_ds("data/val.labeled"))
     datasets = DatasetDict({"train": train_dataset, "validation": validation_dataset})
 
     train(datasets=datasets, source_lang="de", target_lang="en")
