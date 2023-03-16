@@ -1,4 +1,5 @@
 from project_evaluate import read_file
+import json
 
 
 def read_ds(path):
@@ -29,3 +30,28 @@ def read_ds_unlabeled(path):
                 german_sample.append(line)
 
     return ds
+
+
+def load_parsed_ds(file_path):
+    ds = json.load(open(file_path))
+    out_ds = []
+    for val in ds:
+        new_dict = {'en': val['en']}
+
+        intro_sen = ''
+        for value in val['parsing_tree']:
+            root_index = value[1].index(0)
+            root = value[0][root_index]
+            # get modifiers:
+            modifiers_to_add = ''
+            modifiers_of_root_indexes = [idx for idx, value_inner in enumerate(value[1]) if value_inner == root_index]
+            if len(modifiers_of_root_indexes) >= 2:
+                modifiers_to_add = modifiers_to_add + value[0][modifiers_of_root_indexes[0]]
+                modifiers_to_add = modifiers_to_add + ', ' + value[0][modifiers_of_root_indexes[1]]
+            elif len(modifiers_of_root_indexes) == 1:
+                modifiers_to_add = modifiers_to_add + value[0][modifiers_of_root_indexes[0]]
+            intro_sen += f'sentence root: {root}, root modifiers: {modifiers_to_add}, '
+
+        new_dict['de'] = intro_sen + ' German sentences to translate: ' + val['de']
+        out_ds.append(new_dict)
+    return {'translation': out_ds}
