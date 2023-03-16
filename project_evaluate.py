@@ -49,3 +49,12 @@ def calculate_score(file_path1, file_path2):
             raise ValueError('Different Sentences')
     score = compute_metrics(file1_en, file2_en)
     print(score)
+
+
+def main():
+    calculate_score(file_path1='/home/user/PycharmProjects/nlp_ex4_baseline_12/data/val.labeled',
+                    file_path2='/home/user/PycharmProjects/nlp_ex4_baseline_12/models/baseline_t5-base/val.labeled_baseline_t5-base')
+
+
+if __name__ == '__main__':
+    main()
