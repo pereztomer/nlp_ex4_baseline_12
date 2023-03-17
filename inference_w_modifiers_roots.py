@@ -1,4 +1,3 @@
-import torch
 from transformers import pipeline
 from nlp_utils import load_ds_unlabeled_modifiers
 
