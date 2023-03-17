@@ -4,8 +4,8 @@ from nlp_utils import load_ds_unlabeled_modifiers
 
 def main():
     model_name = 'w_modifiers_roots_t5-base'
-    new_file_path = f'models/{model_name}/val.labeled_{model_name}'
-    unlabeled_ds = load_ds_unlabeled_modifiers(path='data/val.unlabeled')
+    new_file_path = f'models/{model_name}/comp.labeled_{model_name}'
+    unlabeled_ds = load_ds_unlabeled_modifiers(path='data/comp.unlabeled')
     for val in unlabeled_ds:
         intro_sen = ''
         new_dict = {}

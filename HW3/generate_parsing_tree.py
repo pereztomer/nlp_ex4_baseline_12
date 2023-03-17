@@ -39,11 +39,10 @@ def splits_paragraph(paragraph):
 
 def main():
     project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
     model = torch.load('comp_model_mlp_ex3').to('cuda')
     sentences_word2idx = model.sentences_word2idx
 
-    file_en, file_de = read_file(f'{project_path}/data/val.labeled')
+    file_en, file_de = read_file(f'{project_path}/data/train.labeled')
     generated_samples = []
 
     for counter, (en_pr, ger_pr) in enumerate(zip(file_en, file_de)):
@@ -81,7 +80,7 @@ def main():
         paragraphs_dict = {'en': en_pr, 'de': ger_pr, 'parsing_tree': split_en_paragraph_list}
         generated_samples.append(paragraphs_dict)
 
-    with open(f"{project_path}/data/server_val_dependency_parsed.json", "w") as outfile:
+    with open(f"{project_path}/data/server_train_dependency_parsed.json", "w") as outfile:
         outfile.write(json.dumps(generated_samples, indent=4))
 
 

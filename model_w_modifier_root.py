@@ -22,7 +22,7 @@ run_name = 'server_w_modifiers_roots'
 wandb.login(key='7573cbc6e943326835b588046bf1ee71f3f43408')
 wandb.init(project=run_name, name=f'attempt 1')
 
-project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+project_path = os.getcwd()
 
 
 def train(datasets, source_lang, target_lang):
