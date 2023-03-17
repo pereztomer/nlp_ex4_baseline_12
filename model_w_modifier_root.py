@@ -9,17 +9,20 @@ from datasets import load_metric
 import numpy as np
 import wandb
 from nlp_utils import load_parsed_ds
+import os
 
 model_type = "t5-base"
 batch_size = 4
-epochs = 100
+epochs = 35
 max_length = 250
 prefix = "translate German to English: "
 
-run_name = 'w_modifiers_roots'
+run_name = 'server_w_modifiers_roots'
 
 wandb.login(key='7573cbc6e943326835b588046bf1ee71f3f43408')
 wandb.init(project=run_name, name=f'attempt 1')
+
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 
 def train(datasets, source_lang, target_lang):
@@ -29,7 +32,7 @@ def train(datasets, source_lang, target_lang):
     model = AutoModelForSeq2SeqLM.from_pretrained(model_type)
 
     args = Seq2SeqTrainingArguments(
-        f"models/{run_name}_{model_type}",
+        f"{project_path}/models/{run_name}_{model_type}",
         evaluation_strategy="epoch",
         save_strategy='epoch',
         logging_strategy="epoch",
@@ -107,9 +110,8 @@ def train(datasets, source_lang, target_lang):
 
 def main():
     train_dataset = Dataset.from_dict(
-        load_parsed_ds('/home/user/PycharmProjects/nlp_ex4_baseline_12/data/train_dependency_parsed.json'))
-    validation_dataset = Dataset.from_dict(load_parsed_ds(
-        '/home/user/PycharmProjects/nlp_ex4_baseline_12/data/val_dependency_parsed.json'))
+        load_parsed_ds(f'{project_path}/data/server_train_dependency_parsed.json'))
+    validation_dataset = Dataset.from_dict(load_parsed_ds(f'{project_path}/data/server_val_dependency_parsed.json'))
 
     datasets = DatasetDict({"train": train_dataset, "validation": validation_dataset})
 

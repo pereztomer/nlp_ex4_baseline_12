@@ -1,48 +1,8 @@
 import torch
-import numpy as np
-from torch.utils.data import DataLoader, Dataset
 from chu_liu_edmonds import decode_mst
 from project_evaluate import read_file
 import json
-
-
-# def padding_(sentences, seq_len):
-#     features = np.zeros((len(sentences), seq_len), dtype=int)
-#     for ii, review in enumerate(sentences):
-#         if len(review) != 0:
-#             features[ii, :len(review)] = np.array(review)[:seq_len]
-#     return features
-
-
-# class CustomDataset(Dataset):
-#     def __init__(self, sentences, positions, seq_len_vals):
-#         self.sentences = sentences
-#         self.positions = positions
-#         self.seq_len_values = seq_len_vals
-#
-#     def __len__(self):
-#         return len(self.sentences)
-#
-#     def __getitem__(self, idx):
-#         return self.sentences[idx], self.positions[idx], self.seq_len_values[idx]
-
-
-# def predict(model, data_loader, device):
-#     model.eval()
-#     predictions = []
-#     with torch.no_grad():
-#         for x, pos, real_seq_len in data_loader:
-#             x = torch.squeeze(x)[:real_seq_len].to(device)
-#             pos = torch.squeeze(pos)[:real_seq_len].to(device)
-#             real_seq_len = torch.squeeze(real_seq_len).to(device)
-#             sample_score_matrix = model(padded_sentence=x,
-#                                         padded_pos=pos,
-#                                         real_seq_len=real_seq_len)
-#
-#             mst, _ = decode_mst(sample_score_matrix.detach().cpu().numpy(), sample_score_matrix.shape[0],
-#                                 has_labels=False)
-#             predictions.append(mst)
-#     return predictions
+import os
 
 
 def splits_paragraph(paragraph):
@@ -62,9 +22,6 @@ def splits_paragraph(paragraph):
 
     split_ds = []
     for sp in sen_splits:
-        # if sp == '' or len(sp) == 1:
-        #     continue
-        # else:
         sub_splits = sp.split('?')
         for sub_sp in sub_splits:
             if sub_sp == '' or len(sub_sp) == 1:
@@ -81,10 +38,12 @@ def splits_paragraph(paragraph):
 
 
 def main():
+    project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
     model = torch.load('comp_model_mlp_ex3').to('cuda')
     sentences_word2idx = model.sentences_word2idx
 
-    file_en, file_de = read_file('/home/user/PycharmProjects/nlp_ex4_baseline_12/data/val.labeled')
+    file_en, file_de = read_file(f'{project_path}/data/val.labeled')
     generated_samples = []
 
     for counter, (en_pr, ger_pr) in enumerate(zip(file_en, file_de)):
@@ -122,8 +81,7 @@ def main():
         paragraphs_dict = {'en': en_pr, 'de': ger_pr, 'parsing_tree': split_en_paragraph_list}
         generated_samples.append(paragraphs_dict)
 
-    with open(f"/home/user/PycharmProjects/nlp_ex4_baseline_12/data"
-              f"/val_dependency_parsed.json", "w") as outfile:
+    with open(f"{project_path}/data/server_val_dependency_parsed.json", "w") as outfile:
         outfile.write(json.dumps(generated_samples, indent=4))
 
 
