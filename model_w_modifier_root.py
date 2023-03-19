@@ -1,3 +1,5 @@
+import random
+
 from datasets.arrow_dataset import Dataset
 from datasets.dataset_dict import DatasetDict
 from transformers import (AutoTokenizer,
@@ -17,7 +19,7 @@ epochs = 35
 max_length = 250
 prefix = "translate German to English: "
 
-run_name = 'server_w_modifiers_roots'
+run_name = 'test_w_modifiers_roots'
 
 wandb.login(key='7573cbc6e943326835b588046bf1ee71f3f43408')
 wandb.init(project=run_name, name=f'attempt 1')
@@ -45,7 +47,8 @@ def train(datasets, source_lang, target_lang):
         predict_with_generate=True,
         fp16=True,
         push_to_hub=False,
-        report_to="wandb")
+        report_to="wandb",
+        seed=42)
 
     def preprocess_function(examples):
         inputs = [prefix + ex[source_lang] for ex in examples["translation"]]
@@ -109,9 +112,11 @@ def train(datasets, source_lang, target_lang):
 
 
 def main():
+    random.seed(42)
+
     train_dataset = Dataset.from_dict(
-        load_parsed_ds(f'{project_path}/data/server_train_dependency_parsed.json'))
-    validation_dataset = Dataset.from_dict(load_parsed_ds(f'{project_path}/data/server_val_dependency_parsed.json'))
+        load_parsed_ds(f'{project_path}/data/train_dependency_parsed.json'))
+    validation_dataset = Dataset.from_dict(load_parsed_ds(f'{project_path}/data/val_dependency_parsed.json'))
 
     datasets = DatasetDict({"train": train_dataset, "validation": validation_dataset})
 
