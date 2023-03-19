@@ -52,8 +52,8 @@ def calculate_score(file_path1, file_path2):
 
 
 def main():
-    calculate_score(file_path1='/home/user/PycharmProjects/nlp_ex4_baseline_12/data/val.labeled',
-                    file_path2='/home/user/PycharmProjects/nlp_ex4_baseline_12/models/w_modifiers_roots_t5-base/val.labeled_w_modifiers_roots_t5-base')
+    calculate_score(file_path1='data/val.labeled',
+                    file_path2='models/w_modifiers_roots_t5-base/val.labeled_w_modifiers_roots_t5-base')
 
 
 if __name__ == '__main__':
