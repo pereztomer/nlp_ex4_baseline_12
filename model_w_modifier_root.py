@@ -47,8 +47,7 @@ def train(datasets, source_lang, target_lang):
         predict_with_generate=True,
         fp16=True,
         push_to_hub=False,
-        report_to="wandb",
-        seed=42)
+        report_to="wandb")
 
     def preprocess_function(examples):
         inputs = [prefix + ex[source_lang] for ex in examples["translation"]]
@@ -112,8 +111,6 @@ def train(datasets, source_lang, target_lang):
 
 
 def main():
-    random.seed(42)
-
     train_dataset = Dataset.from_dict(
         load_parsed_ds(f'{project_path}/data/train_dependency_parsed.json'))
     validation_dataset = Dataset.from_dict(load_parsed_ds(f'{project_path}/data/val_dependency_parsed.json'))
